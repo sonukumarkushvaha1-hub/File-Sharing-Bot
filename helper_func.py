@@ -1,15 +1,27 @@
 import base64
 import re
 import asyncio
-from pyrogram import filters
+from pyrogram import filters, Client
 from pyrogram.enums import ChatMemberStatus
 from config import FORCE_SUB_CHANNEL, ADMINS
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait
 
+# --- यह नया फंक्शन है जो start.py में इस्तेमाल होगा ---
+async def not_subscribed(client, message):
+    if not FORCE_SUB_CHANNEL:
+        return False
+    try:
+        user = await client.get_chat_member(FORCE_SUB_CHANNEL, message.from_user.id)
+        if user.status in [ChatMemberStatus.BANNED, ChatMemberStatus.LEFT]:
+            return True
+        return False
+    except UserNotParticipant:
+        return True
+    except Exception:
+        return False
 
-
-
+# --- पुराना Filter फंक्शन (इसे रहने दें ताकि पुराना कोड न टूटे) ---
 async def is_subscribed(filter, client, update):
     if not FORCE_SUB_CHANNEL:
         return True
@@ -24,8 +36,7 @@ async def is_subscribed(filter, client, update):
     if not member.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.MEMBER]:
         return False
     else:
-        return True 
-
+        return True
 
 async def encode(string):
     string_bytes = string.encode("ascii")
@@ -33,14 +44,12 @@ async def encode(string):
     base64_string = (base64_bytes.decode("ascii")).strip("=")
     return base64_string
 
-
 async def decode(base64_string):
-    base64_string = base64_string.strip("=") # links generated before this commit will be having = sign, hence striping them to handle padding errors.
+    base64_string = base64_string.strip("=")
     base64_bytes = (base64_string + "=" * (-len(base64_string) % 4)).encode("ascii")
-    string_bytes = base64.urlsafe_b64decode(base64_bytes) 
+    string_bytes = base64.urlsafe_b64decode(base64_bytes)
     string = string_bytes.decode("ascii")
     return string
-
 
 async def get_messages(client, message_ids):
     messages = []
@@ -63,7 +72,6 @@ async def get_messages(client, message_ids):
         total_messages += len(temb_ids)
         messages.extend(msgs)
     return messages
-
 
 async def get_message_id(client, message):
     if message.forward_from_chat:
@@ -89,7 +97,6 @@ async def get_message_id(client, message):
     else:
         return 0
 
-
 def get_readable_time(seconds: int) -> str:
     count = 0
     up_time = ""
@@ -111,16 +118,4 @@ def get_readable_time(seconds: int) -> str:
     up_time += ":".join(time_list)
     return up_time
 
-
 subscribed = filters.create(is_subscribed)
-       
-
-
-
-
-
-# Jishu Developer 
-# Don't Remove Credit 🥺
-# Telegram Channel @Madflix_Bots
-# Backup Channel @JishuBotz
-# Developer @JishuDeveloper
