@@ -15,7 +15,7 @@ DB_URL = os.environ.get("DB_URL", "mongodb+srv://sonukumarkushvaha1_db_user:6w9M
 DB_NAME = os.environ.get("DB_NAME", "Cluster0")
 
 
-CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "1003626737474"))
+CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1003626737474"))
 FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1003626737474"))
 FORCE_SUB_LINK = os.environ.get("FORCE_SUB_LINK", "https://t.me/+3TdvTuzF0gtkNmRl")
 
