@@ -34,7 +34,7 @@ except ValueError:
 
 # --- CUSTOMIZATION ---
 CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", None)
-PROTECT_CONTENT = os.environ.get('PROTECT_CONTENT', "False").lower() == "true"
+PROTECT_CONTENT = os.environ.get('PROTECT_CONTENT', "True").lower() == "true"
 DISABLE_CHANNEL_BUTTON = os.environ.get('DISABLE_CHANNEL_BUTTON', "True").lower() == "true"
 
 # --- MESSAGES (Import Errors को रोकने के लिए ये सब यहाँ होने चाहिए) ---
